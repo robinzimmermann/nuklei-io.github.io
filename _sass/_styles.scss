@@ -1,0 +1,262 @@
+$base-color: #104BA9;
+
+$text-color: #555555;
+
+$link-color: darken($base-color, 5%);
+
+$page-background-color: #191920;
+
+$content-background-color: #fafafa;
+
+$font-family: 'Lato', sans-serif;
+
+$heading-color: $base-color;
+
+$footer-padding: 30px;
+$footer-text-color: #888888;
+
+$navbar-color: darken($base-color, 5%);
+$navbar-hover-color: darken($navbar-color, 15%);
+
+
+@mixin mybut($color1: #50c738, $color2: #338024, $mybut-hover-darken-pct: 5%) {
+
+  background: transparent;
+  text-decoration: none;
+  display: inline-block;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-appearance: none;
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+  background-color: $color1;
+  background-image: -webkit-linear-gradient($color1, $color2);
+  background-image: linear-gradient($color1, $color2);
+  background-repeat: repeat-x;
+  border: 1px solid $color2;
+  border-radius: 3px;
+
+  &:hover {
+    background-color:darken($color1, $mybut-hover-darken-pct);
+    background-image:linear-gradient(darken($color1, $mybut-hover-darken-pct), darken($color2, $mybut-hover-darken-pct));
+    background-repeat:repeat-x;
+    border-color: darken($color2, 10%);
+  }
+
+  &:active {
+    background-color: lighten($color2, 5%);
+    background-image: none;
+    border-color: $color2;
+  }
+
+}
+
+html {
+  background-color: $page-background-color;
+}
+
+body {
+  background-color: $content-background-color;
+  padding-top: 50px; // So content doesn't go under the fixed navbar
+  color: $text-color;
+  font-family: $font-family;
+  font-size: 16px;
+}
+
+h1, h2, h3, h4 {
+  color: $heading-color;
+}
+
+h1 {
+  font-family: 'Gruppo', cursive;
+  font-weight: 500;
+  font-size: 28px;
+}
+
+h2 {
+  font-size: 22px;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 300;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+a, a:hover, a:focus {
+  color: $link-color;
+  border-bottom: 1px dashed $link-color;
+  text-decoration: none;
+}
+
+a:hover, a:focus {
+  border-bottom: 1px solid $link-color;
+}
+
+a.image-link {
+  border-bottom: 0;
+}
+
+pre {
+  border-radius: 2px;
+}
+
+.navbar {
+  background-color: #f0f4fa;
+  border: 0;
+}
+
+.navbar-default .navbar-brand {
+  color: $navbar-color;
+  border-bottom: 0;
+}
+
+.navbar-brand {
+  font-family: 'Gruppo', cursive;
+  font-size: 24px;
+  line-height: 18px;
+  // Override the bootstrap default of indenting the brand logo.
+  padding-left: 0;
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: $navbar-color;
+  border-bottom: 0;
+}
+
+.navbar-default .navbar-brand:hover,.navbar-default .navbar-brand:focus {
+  color: $navbar-hover-color;
+  background-color: transparent;
+}
+
+.navbar-default .navbar-nav>li>a:hover,.navbar-default .navbar-nav>li>a:focus {
+  color: $navbar-hover-color;
+  background-color: transparent;
+  border-bottom: 0;
+}
+
+footer {
+  margin-top: 20px;
+  padding-top: $footer-padding;
+  padding-bottom: $footer-padding;
+  background-color: $page-background-color;
+  color: $footer-text-color;
+  font-size: 10pt;
+
+  a, a:hover, a:focus {
+    color: #5687d5;
+  }
+
+  .social-media {
+    font-size: 16pt;
+  }
+
+  .copyright {
+    margin-top: 5px;
+    border-top: solid 1px $footer-text-color;
+
+    .license {
+      text-align: left;
+    }
+  }
+}
+
+.page-content {
+  padding-top: 30px;
+  padding-bottom: 50px;
+  background-color: $content-background-color;
+}
+
+header {
+  background: #499bea;
+  background: -moz-linear-gradient(top,  #499bea 0%, #104ba9 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#499bea), color-stop(100%,#104ba9));
+  background: -webkit-linear-gradient(top,  #499bea 0%,#104ba9 100%);
+  background: -o-linear-gradient(top,  #499bea 0%,#104ba9 100%);
+  background: -ms-linear-gradient(top,  #499bea 0%,#104ba9 100%);
+  background: linear-gradient(to bottom,  #499bea 0%,#104ba9 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#104ba9',GradientType=0 );
+
+  padding-top: 10px;
+  padding-bottom: 30px;
+
+  h1, h2, h3, p {
+    color: #ffffff;
+  }
+
+  h1 {
+    font-size: 50px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  p {
+    font-weight: 300;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+
+}
+
+.home-row {
+  margin-top: 20px;
+}
+
+// #diagnostic is used to show the bootstrap size currently being used. This
+// is helpful for diagnosing layout issues.
+#diagnostic {
+  display: none; // To hide or show diagnostic panel
+  z-index: 2000;
+  position: fixed;
+  top: 0;
+  left: 4px;
+  color: darken(#eef2e9, 5%);
+
+  &:after {
+    content: "xs";
+  }
+}
+
+@media (min-width: 768px) {
+
+  #diagnostic:after {
+    content: "sm";
+  }
+
+  footer .copyright .license {
+    text-align: right;
+  }
+
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+
+  #diagnostic:after {
+    content: "md";
+  }
+
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+
+  #diagnostic:after {
+    content: "lg";
+  }
+
+}

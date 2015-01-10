@@ -1,0 +1,105 @@
+<footer>
+  <div class="container">
+
+    <a href="http://kaazing.org" class="image-link"><img src="/img/kaazing_white.png"></a>
+
+    <div class="row copyright">
+      <div class="col-xs-12 col-sm-5 text-left">
+        &copy; 2014-2015 Kaazing Corporation
+      </div>
+      <div class="col-xs-12 col-sm-7 license">
+        This website is licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons BY-NC-SA</a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<!-- start:javascript for this page -->
+<script src="/js/jquery-1.11.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+{% comment %}
+It's desirable to put .js files at the end of the body to help with page loading.
+But some JavaScript files are only for specific pages, so initially I embedded them
+in those pages. But they had a dependency on JQuery, causing JQuery to go in the <head>.
+
+PageSpeed Insights (http://developers.google.com/speed/pagespeed/insights/?url=http%3A%2F%2Fkaazing.org%2F)
+said this was bad.
+
+So the challenge is it put all JavaScript files in the footer, but only include them
+when they're needed so they're not on every page.
+
+The solution arrived at is to use a Liquid variable. Any page that needs that JavaScript
+can set the variable.
+{% endcomment %}
+
+{% if page.js-History %}
+<script src="/assets/browserstate-history-1.8-13/scripts/bundled/html4+html5/jquery.history.js"></script>
+{% endif %}
+
+{% if page.js-DemoSummary %}
+<!--[if lte IE 8]>
+<script>
+if (!Array.prototype.filter)
+{
+  Array.prototype.filter = function(fun /*, thisp */)
+  {
+    "use strict";
+
+    if (this === void 0 || this === null)
+      throw new TypeError();
+
+    var t = Object(this);
+    var len = t.length >>> 0;
+    if (typeof fun !== "function")
+      throw new TypeError();
+
+    var res = [];
+    var thisp = arguments[1];
+    for (var i = 0; i < len; i++)
+    {
+      if (i in t)
+      {
+        var val = t[i]; // in case fun mutates this
+        if (fun.call(thisp, val, i, t))
+          res.push(val);
+      }
+    }
+
+    return res;
+  };
+}
+</script>
+<![endif]-->
+<script src="/js/demo-summary.js"></script>
+{% endif %}
+
+{% if page.js-DemoDetailsFlexSlider %}
+<script src="/assets/woothemes-FlexSlider/jquery.flexslider.js"></script>
+  <script>
+    $(window).load(function() {
+
+      $('#slider').flexslider({
+        animation: "slide",
+        controlNav: "thumbnails",
+        keyboard: true,
+        prevText: "",
+        nextText: "",
+        slideshowSpeed: 10000,
+      });
+
+    });
+  </script>
+{% endif %}
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1771436-11', 'auto');
+  ga('send', 'pageview');
+  </script
+  <!-- end:javascript for this page -->
