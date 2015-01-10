@@ -127,8 +127,6 @@ pre {
   font-family: 'Gruppo', cursive;
   font-size: 24px;
   line-height: 18px;
-  // Override the bootstrap default of indenting the brand logo.
-  padding-left: 0;
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -235,6 +233,11 @@ header {
 
   #diagnostic:after {
     content: "sm";
+  }
+
+  .navbar-brand {
+    // Override the bootstrap default of indenting the brand logo.
+    padding-left: 0;
   }
 
   footer .copyright .license {
