@@ -1,0 +1,7 @@
+# Learn more about how this file was configured from:
+# http://jekyllrb.com/docs/continuous-integration
+
+language: ruby
+rvm:
+- 2.1
+script: ./_script/cibuild
