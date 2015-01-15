@@ -22,3 +22,7 @@ gems:
   - jemoji
   - jekyll-redirect-from
 #  - jekyll-sitemap
+
+# For continuous integration. See:
+# http://jekyllrb.com/docs/continuous-integration/#gotchas
+exclude: [vendor]
