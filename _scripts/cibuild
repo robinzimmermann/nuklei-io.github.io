@@ -1,0 +1,169 @@
+#!/usr/bin/env bash
+
+# Run this from the top level directory.
+
+JEKYLL_OUTPUT_FILE=jekyll-build-output.txt
+
+ERROR=0
+
+set -e # halt script on error
+
+# Check if a file is referenced in any .html or .md files, along with the
+# "include" on the same line
+#
+# ${1} = the file that is being tested if referenced
+#
+# Example: checkIfIncludeFileIsReferenced "_includes/header.html"
+#
+checkIfIncludeFileIsReferenced() {
+    # Strip the first item from the front of the path, e.g. "_includes"
+    include_file=${1#*/}
+
+    if ! find . -name "*.html" -o -name "*.md" | egrep -v _site | xargs egrep ${include_file} | egrep -q -i "include"
+    then
+        echo "ERROR: ${1} is not referenced anywhere"
+        ERROR=1
+    fi
+}
+
+checkIfLayoutFileIsReferenced() {
+    # Strip the first item from the front of the path, e.g. "_includes"
+    include_file=${1#*/}
+
+    # Strip the extension because layouts are referenced without the
+    # extension.
+    include_file=${include_file%.*}
+
+    if ! find . -name "*.html" -o -name "*.md" | egrep -v _site | xargs egrep ${include_file} | egrep -q -i "layout:"
+    then
+        echo "ERROR: ${1} is not referenced anywhere"
+        ERROR=1
+    fi
+}
+
+# Check if a file is referenced in any .html, .md, .scss, or .js files.
+#
+# ${1} = the file that is being tested if referenced
+#
+# Example: checkIfFileIsReferenced "img/kaazing.png"
+#
+checkIfFileIsReferenced() {
+    # Strip the first item from the front of the path, e.g. "_includes"
+    include_file=${1#*/}
+
+    if ! find . -name "*.html" -o -name "*.md" -o -name "*.scss" -o -name "*.js" | egrep -v _site | xargs egrep -q ${include_file}
+    then
+        echo "ERROR: ${1} is not referenced anywhere"
+        ERROR=1
+    fi
+}
+
+# Check if a CSS file is referenced in any .html files.
+#
+# ${1} = the CSS file that is being tested if referenced
+#
+# Example: checkIfCssFileIsReferenced "css/bootstrap.min.css"
+# Example: checkIfCssFileIsReferenced "css/main.scss"
+#
+checkIfCssFileIsReferenced() {
+    # Strip the first item from the front of the path, e.g. "_includes"
+    include_file=${1#*/}
+
+    # Strip the extension because SASS files will end up with a CSS
+    # extension.
+    include_file=${include_file%.*}
+
+    # Now add the CSS extension.
+    include_file=${include_file}.css
+
+    if ! find . -name "*.html" | egrep -v _site | xargs egrep -q ${include_file}
+    then
+        echo "ERROR: ${1} is not referenced anywhere"
+        ERROR=1
+    fi
+}
+
+# Check if a Sass file is referenced in any .scss files.
+#
+# ${1} = the Sass file that is being tested if referenced
+#
+# Example: checkIfSassFileIsReferenced "_sass/main.scss"
+#
+checkIfSassFileIsReferenced() {
+    # Strip the first item from the front of the path, e.g. "_includes"
+    include_file=${1#*/}
+
+    # Strip the extension because SASS files are included without the
+    # extension.
+    include_file=${include_file%.*}
+
+    # Strip the underscore because SASS files are included without
+    # the underscore.
+    include_file=${include_file:1}
+
+    if ! find . -name "*.scss" | egrep -v _site | xargs egrep -q ${include_file}
+    then
+        echo "ERROR: ${1} is not referenced anywhere"
+        ERROR=1
+    fi
+}
+
+# Look over all files recursively into sub-directories and
+# invoke the given function.
+#
+# ${1} = the top-level directory to being recursing into.
+#
+# ${2} = the function to be invoked for each file. The function should accept
+#        one parameter which is the path to the file.
+#
+# Example: recursiveFileLoop "_includes/*" myFunc
+#
+recursiveFileLoop() {
+    for d in ${1}; do
+        if [ -d ${d} ]; then
+            recursiveFileLoop "${d}/*" ${2}
+        else
+            ${2} ${d}
+        fi
+    done
+}
+
+recursiveFileLoop "_includes/*" checkIfIncludeFileIsReferenced
+
+recursiveFileLoop "_layouts/*" checkIfLayoutFileIsReferenced
+
+recursiveFileLoop "img/*" checkIfFileIsReferenced
+
+recursiveFileLoop "js/*" checkIfFileIsReferenced
+
+recursiveFileLoop "css/*" checkIfCssFileIsReferenced
+
+recursiveFileLoop "_sass/*" checkIfSassFileIsReferenced
+
+# If any of the above checks had an error, then fail.
+if [ ${ERROR} -ne 0 ]
+then
+    echo "You have a problem. Exiting."
+    exit 1
+fi
+
+# Do a Jekyll build to create the site.
+bundle exec jekyll build 2>&1 | tee ${JEKYLL_OUTPUT_FILE}
+
+# If Jekll build had an error, then exit and propagate the status.
+JEKYLL_EXIT_CODE=${PIPESTATUS[0]}
+if [ "${JEKYLL_EXIT_CODE}" -ne "0" ]
+then
+    echo "ERROR: Jekyll build failed. Exiting with status ${JEKYLL_EXIT_CODE}."
+    exit ${JEKYLL_EXIT_CODE}
+fi
+
+# If Jekll build had warning, then exit.
+if grep -q -i "Build Warning" ${JEKYLL_OUTPUT_FILE}
+then
+    echo "ERROR: Jekyll build gave a warning. Exiting."
+    exit 1
+fi
+
+# Check the site with html-proof
+bundle exec htmlproof ./_site
